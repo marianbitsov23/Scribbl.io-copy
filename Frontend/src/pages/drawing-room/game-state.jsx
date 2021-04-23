@@ -5,6 +5,8 @@ const GameState = (props) => {
     const { url } = props;
     const [updatableCurrentUser, setCurrentUser] = useState(props.currentUser);
     const [messages, setMessages] = useState([]);
+    const [brushColor, setBrushColor] = useState("#000000");
+    const [brushSize, setBrushSize] = useState(30);
     const [gameState, setGameState] = useState(props.gameState);
     const [chosenWord, setChosenWord] = useState();
     const [words, setWords] = useState(gameState.words);
@@ -16,6 +18,19 @@ const GameState = (props) => {
     const [resultDialog, setResultDialog] = useState(false);
     const [saveData, setSaveData] = useState();
     const canvasDraw = useRef(null);
+    const colors = [
+        {hex: "#000000", name: "black"}, //black
+        {hex: "#ffffff", name: "white"}, //white
+        {hex: "#d3d3d3", name: "light gray"}, //light gray
+        {hex: "#ff0000", name: "red"}, //red
+        {hex: "#ffff00", name: "yellow"}, //yellow
+        {hex: "#0000ff", name: "blue"}, //blue
+        {hex: "#008000", name: "green"}, //green
+        {hex: "#00008b", name: "drak blue"}, //dark blue
+        {hex: "#800080", name: "purple"}, //purple
+        {hex: "#ffc0cb", name: "pink"}, //pink
+        {hex: "#8b4513", name: "brown"} //brown
+    ];
 
     const onMessageReceived = (payload) => {
         const response = JSON.parse(payload.body);
@@ -37,7 +52,6 @@ const GameState = (props) => {
         } else if(response.type === "END_MOVE") {
             setResultDialog(true);
         } else if(response.type === "CONTINUE_MOVE") {
-            console.log(response.users);
             setOpen(true);
             setTimeForDrawing(response.timeForDrawing);
             setNumberOfRounds(response.numberOfRounds);
@@ -103,20 +117,20 @@ const GameState = (props) => {
         stompClient.send("/api/app/" + url + "/end/move", {},
             JSON.stringify({ sender: updatableCurrentUser, content: "", type: "END_MOVE" }));
 
-        console.log(users);
         //display the result dialog
         setTimeout(() => {
             //send a notification for a game continue()
             //and reset all isCorrect on all users
             stompClient.send("/api/app/" + url + "/continue/move", {},
                 JSON.stringify({ type: "CONTINUE_MOVE", users: users }));
-        }, 3000);
+        }, 4000);
     }
 
     return {
         messages, stompClient, setCurrentUser, endMove, updatableCurrentUser,
-        timeForDrawing, setTimeForDrawing, numberOfRounds,
-        users, setUsers, open, closeDialog, chooseWord, words,
+        timeForDrawing, setTimeForDrawing, numberOfRounds, colors,
+        brushColor, setBrushColor, users, setUsers, 
+        open, closeDialog, chooseWord, words, brushSize, setBrushSize,
         chosenWord, resultDialog, setResultDialog, gameEnd
     }
 }

@@ -89,7 +89,7 @@ const DrawingRoomSettings = (props) => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                disabled={disabled}
+                disabled={!disabled}
                 onClick={() => startGame(
                     url,
                     languages[languageIndex],
@@ -103,7 +103,6 @@ const DrawingRoomSettings = (props) => {
 
             <Dialog
                 open={open}
-                onClose={closeDialog}
             >
                 <DialogTitle>
                     Enter your username

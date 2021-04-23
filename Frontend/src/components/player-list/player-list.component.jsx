@@ -3,16 +3,19 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        padding: theme.spacing(0, 3),
+    list: {
+        backgroundColor: '#d3d3d3',
+        margin: '0 16px'
     },
     listItem: {
         display: 'flex',
-        justifyContent: 'space-around',
+        flexDirection: 'column',
     },
     item: {
-        margin: '16px',
+        display: 'flex',
+        margin: '0 16px',
+        width: '100%',
+        justifyContent: "space-between",
     }
 }));
 
@@ -21,16 +24,18 @@ export default function PlayerList(props) {
 
     return(
         <>
-            <List>
+            <List className={classes.list}>
             {props.users.map((user, index) => (
                 <ListItem className={classes.listItem} key={index}>
-                    <ListItemText
+                    <div
                         className={classes.item}
-                        primary={user.name}
-                        secondary={props.currentUser.name === user.name ? '(You)' : null}
-                    />
+                    >
+                        <div>{user.name}</div>
+                        <div>{props.currentUser.name === user.name ? '(You)' : null}</div>
+                        <div>Points: {user.points}</div>
+                    </div>
                     <Typography className={classes.item}>
-                        Points: {user.points}
+                        
                     </Typography>
                 </ListItem>
             ))}

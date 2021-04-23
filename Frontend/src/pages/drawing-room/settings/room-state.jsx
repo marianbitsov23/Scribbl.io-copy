@@ -120,7 +120,7 @@ const RoomState = (props) => {
 
     const closeDialog = () => setOpen(false);
 
-    const disabled = users.length < 1;
+    const disabled = users.length > 1;
 
     return { 
         setInputProps, languages, currentUser,

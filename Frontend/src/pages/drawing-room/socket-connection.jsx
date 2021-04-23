@@ -7,12 +7,11 @@ const SocketConnection = (props) => {
     const { url, currentUser, onMessageReceived, type } = props;
 
     const connect = () => {
-        console.log('asdfas');
         let mySockJS = new SockJS("http://localhost:8080/api/chat");
         setStompClient(Stomp.over(mySockJS));
     }
     
-    const onError = (error) => console.log(error);
+    const onError = (error) => console.error(error);
 
     useEffect(() => {
         const onConnected = () => {

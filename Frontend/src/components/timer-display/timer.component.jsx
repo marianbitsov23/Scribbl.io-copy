@@ -1,6 +1,6 @@
 import React from 'react';
 import Countdown from 'react-countdown';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 
 const Timer = (props) => {
     const renderer = ({ hours, minutes, seconds, completed }) => {
@@ -9,8 +9,11 @@ const Timer = (props) => {
             return <>Completed !</>;
         } else {
             return (
-                <Button>
-                    {seconds}
+                <Button
+                    variant="contained"
+                    color="primary"
+                >
+                    Time remaining:  {seconds}
                 </Button>
             );
         }
@@ -21,8 +24,14 @@ const Timer = (props) => {
             <Countdown
                 date={Date.now() + props.timeForDrawing * 1000}
                 onTick={callback => {
-                    if(callback.completed) props.endMove();
-                    else props.setTime(callback.seconds) 
+                    if(props.isPlaying && callback.seconds === 1) {
+                        setTimeout(() => {
+                            props.endMove();
+                        }, 1000);
+                    }
+                    else {
+                        props.setTime(callback.seconds) 
+                    }
                 }}
                 renderer={renderer}
             />

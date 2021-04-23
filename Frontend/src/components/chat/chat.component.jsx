@@ -28,6 +28,7 @@ const Chat = (props) => {
     return(
         <div className={classes.root}>
             <Paper className={classes.paper}>
+                <h2>Chat:</h2>
                 {messages.map((message, index) => (
                     <MessageCard 
                         key={index} 
@@ -36,22 +37,26 @@ const Chat = (props) => {
                         type={message.type} 
                     />
                 ))}
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    value={chatInput}
-                    type="text"
-                    onChange={event => enterMessage(event.target.value)}
-                />
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    disabled={isInvalid}
-                    onClick={sendMessage}
-                >
-                    Continue
-                </Button>
+                {!currentUser.isPlaying &&
+                    <>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            value={chatInput}
+                            type="text"
+                            onChange={event => enterMessage(event.target.value)}
+                        />
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            disabled={isInvalid}
+                            onClick={sendMessage}
+                        >
+                            Send message
+                        </Button>
+                    </>
+                }
             </Paper>
         </div>
     )
