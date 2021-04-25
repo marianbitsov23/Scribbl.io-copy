@@ -12,6 +12,10 @@ public class Word {
     private String name;
 
     @ManyToOne
+    @JoinColumn(name = "drawing_room_id")
+    private DrawingRoom drawingRoom;
+
+    @ManyToOne
     @JoinColumn(name = "language_id", referencedColumnName = "id")
     private Language language;
 

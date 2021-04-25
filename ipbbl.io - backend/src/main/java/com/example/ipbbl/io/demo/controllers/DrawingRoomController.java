@@ -4,9 +4,7 @@ import com.example.ipbbl.io.demo.models.*;
 import com.example.ipbbl.io.demo.payload.ConnectionResponse;
 import com.example.ipbbl.io.demo.payload.DrawingRoomRequest;
 import com.example.ipbbl.io.demo.models.GameState;
-import com.example.ipbbl.io.demo.repositories.DrawingRoomRepository;
-import com.example.ipbbl.io.demo.repositories.LanguageRepository;
-import com.example.ipbbl.io.demo.repositories.WordRepository;
+import com.example.ipbbl.io.demo.repositories.*;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.JSONParserConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +32,38 @@ public class DrawingRoomController {
     @Autowired
     WordRepository wordRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    DrawingGameRepository drawingGameRepository;
+
     Map<String, List<User>> users = new HashMap<>();
     Map<String, GameState> gameStates = new HashMap<>();
     Map<String, String> roomStates = new HashMap<>();
     Map<String, List<Word>> usedWords = new HashMap<>();
+
+    @MessageMapping("/{url}/end/game")
+    @SendTo("/api/topic/{url}")
+    public void endGame(@DestinationVariable String url, @Payload ChatMessage gameEnd) {
+        Optional<DrawingRoom> drawingRoom = drawingRoomRepository.findByUrl(url);
+
+        if(drawingRoom.isPresent()) {
+            List<User> gameUsers = new ArrayList<>();
+            for(User u : users.get(url)) {
+                gameUsers.add(userRepository.save(u));
+            }
+
+            drawingGameRepository.save(
+                    new DrawingGame(
+                            drawingRoom.get().getNumberOfRounds(),
+                            drawingRoom.get().getTimeForDrawing(),
+                            gameUsers,
+                            usedWords.get(url)
+                    )
+            );
+        }
+    }
 
     @MessageMapping("/{url}/choose/word")
     @SendTo("/api/topic/{url}")

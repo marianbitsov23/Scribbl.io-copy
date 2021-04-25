@@ -1,6 +1,14 @@
 package com.example.ipbbl.io.demo.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
 
     private Boolean isPlaying;
@@ -10,6 +18,10 @@ public class User {
     private Boolean isCorrect;
 
     private Integer points;
+
+    @ManyToOne
+    @JoinColumn(name = "drawing_room_id")
+    private DrawingRoom drawingRoom;
 
     public User() {}
 
@@ -42,4 +54,8 @@ public class User {
     public Boolean getIsCorrect() { return isCorrect; }
 
     public void setIsCorrect(Boolean correct) { isCorrect = correct; }
+
+    public void setId(Long id) { this.id = id; }
+
+    public Long getId() { return id; }
 }

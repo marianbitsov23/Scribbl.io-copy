@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import SocketConnection from './socket-connection';
 
 const GameState = (props) => {
-    const { url, canvasRef } = props;
+    const { url, canvasRef, history } = props;
     const [updatableCurrentUser, setCurrentUser] = useState(props.currentUser);
     const [messages, setMessages] = useState([]);
     const [brushColor, setBrushColor] = useState("#000000");
@@ -91,6 +91,16 @@ const GameState = (props) => {
             //end game
             setOpen(false);
             setGameEnd(true);
+
+            setTimeout(() => {
+                if(updatableCurrentUser.isCreator) {
+                    stompClient.send("/api/app/" + url + "/game/end",
+                        {},
+                        JSON.stringify({sender: sender, content: "game end", type: 'UPDATE_ROOM'}))
+                    stompClient.disconnect();
+                }
+                history.go(-2);
+            }, 4000);
         }
     }, [numberOfRounds]);
 

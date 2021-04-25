@@ -60,7 +60,7 @@ const DrawingRoom = (props) => {
         users, open, closeDialog, numberOfRounds, colors,
         words, brushSize, setBrushSize, updatableCurrentUser,
         chosenWord, chooseWord, stompClient, gameEnd, saveData,
-    } = GameState({ url, currentUser, gameState, canvasRef });
+    } = GameState({ url, currentUser, gameState, canvasRef, history: props.history });
     
     return(
         <>
