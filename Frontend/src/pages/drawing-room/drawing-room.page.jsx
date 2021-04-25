@@ -1,5 +1,5 @@
 import { Avatar, Button, Dialog, DialogContent, DialogTitle, Slider } from '@material-ui/core';
-import React from 'react';
+import React, { useRef } from 'react';
 import CanvasDraw from 'react-canvas-draw';
 import Chat from '../../components/chat/chat.component';
 import PlayerList from '../../components/player-list/player-list.component';
@@ -7,6 +7,8 @@ import Timer from '../../components/timer-display/timer.component';
 import WordDisplay from '../../components/word-display/word-display.component';
 import GameState from './game-state';
 import { makeStyles } from '@material-ui/core/styles';
+import ReactCanvasPaint from 'react-canvas-paint'
+import 'react-canvas-paint/dist/index.css'
 
 const useStyles = makeStyles((theme) => ({
     drawing: {
@@ -50,14 +52,16 @@ const DrawingRoom = (props) => {
     const { currentUser, gameState } = props.location.state;
     const classes = useStyles();
 
+    const canvasRef = useRef(null);
+
     const {
-        messages, setCurrentUser, resultDialog, brushColor, 
-        timeForDrawing, setTimeForDrawing, endMove, 
+        messages, setCurrentUser, resultDialog, 
+        timeForDrawing, setTimeForDrawing, endMove, draw,
         users, open, closeDialog, numberOfRounds, colors,
         words, brushSize, setBrushSize, updatableCurrentUser,
-        chosenWord, chooseWord, stompClient, gameEnd, setBrushColor
-    } = GameState({ url, currentUser, gameState });
-
+        chosenWord, chooseWord, stompClient, gameEnd, saveData,
+    } = GameState({ url, currentUser, gameState, canvasRef });
+    
     return(
         <>
             {!open && !resultDialog && !gameEnd &&
@@ -85,14 +89,16 @@ const DrawingRoom = (props) => {
 
                         <div>
                             <CanvasDraw
+                                ref={canvasRef}
+                                onChange={event => draw(event)}
                                 disabled={!updatableCurrentUser.isPlaying}
                                 brushRadius={brushSize}
-                                brushColor={brushColor}
                                 canvasHeight={600}
                                 canvasWidth={800}
                             />
                             {updatableCurrentUser.isPlaying &&
                             <div className={classes.tools}>
+                                {/*
                                 <div className={classes.colors}>
                                     <h3>
                                         Choose colors
@@ -110,6 +116,7 @@ const DrawingRoom = (props) => {
                                         </Button>
                                     ))}
                                 </div>
+                                */}
                                 <div className={classes.edit}>
                                     <div className={classes.clear}>
                                         <Button

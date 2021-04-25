@@ -31,6 +31,14 @@ public class DrawingRoom {
         this.language = language;
     }
 
+    public DrawingRoom(String url, int timeForDrawing, int numberOfRounds, String creatorUsername) {
+        this.url = url;
+        this.timeForDrawing = timeForDrawing;
+        this.numberOfRounds = numberOfRounds;
+        this.creatorUsername = creatorUsername;
+    }
+
+
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }

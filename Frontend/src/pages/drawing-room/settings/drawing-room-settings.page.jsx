@@ -6,15 +6,19 @@ import PlayerList from '../../../components/player-list/player-list.component';
 
 const DrawingRoomSettings = (props) => { 
     const url = props.match.params.roomId;
-    const defaultUsername = props.location.state;
+    let defaultUsername, drawingRoom;
+    if(props.location.state) {
+        defaultUsername = props.location.state.defaultUsername;
+        drawingRoom = props.location.state.drawingRoom;
+    }
 
     const { 
         numberOfRounds, setNumberOfRounds, setOpen,
         timeForDrawing, setTimeForDrawing, currentUser,
         languages, languageIndex, setLanguageIndex, disabled,
         setInputProps, startGame, open, username, 
-        connect, setUsername, closeDialog, users,
-    } = RoomState({ url: url, defaultUsername: defaultUsername, history: props.history });
+        connect, setUsername, users,
+    } = RoomState({ url: url, defaultUsername: defaultUsername, history: props.history, drawingRoom: drawingRoom });
 
     return(
         <Container>

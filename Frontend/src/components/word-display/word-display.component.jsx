@@ -16,9 +16,9 @@ const WordDisplay = (props) => {
                     <h1>
                         {wordSize.map((letter, index) => (
                             <>
-                                {index === props.word.name.length - 1 || props.isCorrect && <span>{letter}</span>}
-                                {!props.isCorrect && letter !== ' ' && <span>_ </span>}
-                                {letter === ' ' && <span style={{ margin: '0 16px' }}>{' '}</span>}
+                                {((index === props.word.name.length - 1) || (props.isCorrect)) && <span>{letter}</span>}
+                                {((!props.isCorrect) && (letter !== ' ')) && <span>_ </span>}
+                                {(letter === ' ') && <span style={{ margin: '0 16px' }}>{' '}</span>}
                             </>
                         ))}
                         

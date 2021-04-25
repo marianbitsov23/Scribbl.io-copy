@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/drawing-room")
 public class DrawingRoomController {
-
     @Autowired
     DrawingRoomRepository drawingRoomRepository;
 
@@ -254,8 +253,25 @@ public class DrawingRoomController {
                 drawingRoomRequest.getCreatorUsername(),
                 language
         );
-
         return new ResponseEntity<>(drawingRoomRepository.save(drawingRoom), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DrawingRoom> updateDrawingRoom(@PathVariable Long id, @RequestBody DrawingRoom drawingRoom) {
+        Optional<DrawingRoom> foundDrawingRoom = drawingRoomRepository.findById(id);
+
+        if(foundDrawingRoom.isPresent()) {
+            DrawingRoom newDrawingRoom = foundDrawingRoom.get();
+            newDrawingRoom.setCreatorUsername(drawingRoom.getCreatorUsername());
+            newDrawingRoom.setLanguage(drawingRoom.getLanguage());
+            newDrawingRoom.setNumberOfRounds(drawingRoom.getNumberOfRounds());
+            newDrawingRoom.setTimeForDrawing(drawingRoom.getTimeForDrawing());
+            newDrawingRoom.setUrl(drawingRoom.getUrl());
+
+            return new ResponseEntity<>(drawingRoomRepository.save(newDrawingRoom), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{url}")
@@ -264,5 +280,16 @@ public class DrawingRoomController {
 
         return drawingRoom.map(room -> new ResponseEntity<>(room, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllPublicDrawingRooms() {
+        Optional<List<DrawingRoom>> publicDrawingRooms = drawingRoomRepository.findAllByNumberOfRounds(0);
+
+        if(publicDrawingRooms.isPresent()) {
+            return new ResponseEntity<>(publicDrawingRooms.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

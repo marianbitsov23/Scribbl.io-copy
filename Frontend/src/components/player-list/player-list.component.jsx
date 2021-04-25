@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { List, ListItem, Typography } from '@material-ui/core';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -28,6 +28,7 @@ export default function PlayerList(props) {
             {props.users.map((user, index) => (
                 <ListItem className={classes.listItem} key={index}>
                     <div
+                        id="user-list"
                         className={classes.item}
                     >
                         <div>{user.name}</div>

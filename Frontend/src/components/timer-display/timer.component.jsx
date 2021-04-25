@@ -1,6 +1,6 @@
 import React from 'react';
 import Countdown from 'react-countdown';
-import { Button, Typography } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 const Timer = (props) => {
     const renderer = ({ hours, minutes, seconds, completed }) => {

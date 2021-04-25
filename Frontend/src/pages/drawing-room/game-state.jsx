@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import SocketConnection from './socket-connection';
 
 const GameState = (props) => {
-    const { url } = props;
+    const { url, canvasRef } = props;
     const [updatableCurrentUser, setCurrentUser] = useState(props.currentUser);
     const [messages, setMessages] = useState([]);
     const [brushColor, setBrushColor] = useState("#000000");
@@ -16,20 +16,19 @@ const GameState = (props) => {
     const [open, setOpen] = useState(false);
     const [gameEnd, setGameEnd] = useState(false);
     const [resultDialog, setResultDialog] = useState(false);
-    const [saveData, setSaveData] = useState();
-    const canvasDraw = useRef(null);
+    const [saveData, setSaveData] = useState(new ImageData(800, 600));
     const colors = [
-        {hex: "#000000", name: "black"}, //black
-        {hex: "#ffffff", name: "white"}, //white
-        {hex: "#d3d3d3", name: "light gray"}, //light gray
-        {hex: "#ff0000", name: "red"}, //red
-        {hex: "#ffff00", name: "yellow"}, //yellow
-        {hex: "#0000ff", name: "blue"}, //blue
-        {hex: "#008000", name: "green"}, //green
-        {hex: "#00008b", name: "drak blue"}, //dark blue
-        {hex: "#800080", name: "purple"}, //purple
-        {hex: "#ffc0cb", name: "pink"}, //pink
-        {hex: "#8b4513", name: "brown"} //brown
+        "#000000", //black
+        "#ffffff", //white
+        "#d3d3d3", //light gray
+        "#ff0000",//red
+        "#ffff00", //yellow
+        "#0000ff", //blue
+        "#008000", //green
+        "#00008b", //dark blue
+        "#800080", //purple
+        "#ffc0cb", //pink
+        "#8b4513" //brown
     ];
 
     const onMessageReceived = (payload) => {
@@ -41,7 +40,12 @@ const GameState = (props) => {
             setOpen(false);
         }else if(response.type === "DRAW" && response.sender.name !== updatableCurrentUser.name) {
             //implement drawing
-            setSaveData(canvasDraw.current.loadSaveData(response.content, true));
+            let recievedData = new Map(JSON.parse(response.content));
+            let newSavedData = saveData;
+            recievedData.forEach((value, key) => {
+                newSavedData.data[key] = value;
+            })
+            setSaveData(newSavedData);
         } else if(response.type === "UPDATE_ROOM") {
             const users = JSON.parse(response.content);
             setUsers(users);
@@ -126,10 +130,26 @@ const GameState = (props) => {
         }, 4000);
     }
 
+
+    const proccessChunk = async (pixels) => {
+        let mapChunk = new Map();
+
+        pixels.forEach((pixel, index) => {
+            if(pixel !== 0) {
+                mapChunk.set(index, pixel);
+            }
+        });
+        return mapChunk;
+    }
+
+    const draw = (event) => {
+        console.log(event);
+    }
+
     return {
         messages, stompClient, setCurrentUser, endMove, updatableCurrentUser,
         timeForDrawing, setTimeForDrawing, numberOfRounds, colors,
-        brushColor, setBrushColor, users, setUsers, 
+        brushColor, setBrushColor, users, setUsers, draw, saveData,
         open, closeDialog, chooseWord, words, brushSize, setBrushSize,
         chosenWord, resultDialog, setResultDialog, gameEnd
     }

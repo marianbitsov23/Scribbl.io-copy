@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Chat = (props) => {
-    const { currentUser, messages, setCurrentUser } = props;
+    const { currentUser, messages } = props;
     const { chatInput, sendMessage, enterMessage } = MessageHandler(props);
     const isInvalid = chatInput === "" || currentUser.isCorrect;
     const classes = useStyles();

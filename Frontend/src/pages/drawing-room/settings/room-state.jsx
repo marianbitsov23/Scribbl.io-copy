@@ -4,7 +4,7 @@ import drawingRoomService from '../../../services/drawing-room.service';
 import SocketConnection from '../socket-connection';
 
 const RoomState = (props) => {
-    const { url, defaultUsername } = props;
+    const { url, defaultUsername, drawingRoom } = props;
     const [numberOfRounds, setNumberOfRounds] = useState(3);
     const [timeForDrawing, setTimeForDrawing] = useState(60);
     const [languageIndex, setLanguageIndex] = useState(0);
@@ -44,13 +44,6 @@ const RoomState = (props) => {
 
     //Connect and Disconnect user
     useEffect(() => {
-        setCurrentUser({
-            name: username,
-            isPlaying: false,
-            isCreator: false,
-            isCorrect: false,
-            points: 0
-        });
         const sender = {
             name: username,
             isPlaying: false,
@@ -62,11 +55,18 @@ const RoomState = (props) => {
         const cleanup = () => {
             stompClient.send("/api/app/disconnect/" + url,
                 {},
-                JSON.stringify({sender: sender, type: 'LEAVE'})
-            )
+                JSON.stringify({sender: sender, type: 'LEAVE'}));
             stompClient.disconnect();
         }
+        
         window.addEventListener('beforeunload', cleanup);
+        setCurrentUser({
+            name: username,
+            isPlaying: false,
+            isCreator: false,
+            isCorrect: false,
+            points: 0
+        });
         return () => window.removeEventListener('beforeunload', cleanup);
     }, [username]);
 
@@ -107,12 +107,12 @@ const RoomState = (props) => {
     }
 
     const startGame = (url, language, history) => {
-        drawingRoomService.createDrawingRoom({
+        drawingRoomService.updateDrawingRoom(drawingRoom.id, {
             url: url,
             creatorUsername: currentUser.name,
             numberOfRounds: numberOfRounds,
             timeForDrawing: timeForDrawing,
-            language: language.name
+            language: language
         })
         .then(result => stompClient.send("/api/app/" + url + "/start", {}, JSON.stringify(result.data)))
         .catch(error => console.error(error));

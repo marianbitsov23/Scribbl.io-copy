@@ -17,6 +17,14 @@ class DrawingRoomService {
         );
     }
 
+    updateDrawingRoom(id, drawingRoom) {
+        return axios.put(API_URL + "/" + id, drawingRoom);
+    }
+
+    getAllPublicDrawingRooms() {
+        return axios.get(API_URL);
+    }
+
     getDrawingRoomByURL(url) {
         return axios.get(API_URL + "/" + url);
     }
