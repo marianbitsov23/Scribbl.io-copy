@@ -7,6 +7,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -16,12 +17,12 @@ public class SeleniumConfig {
     public WebDriver driver;
 
     public SeleniumConfig() {
-        driver = new FirefoxDriver();
+        driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
 
     static {
-        System.setProperty("webdriver.gecko.driver", findFile("geckodriver.exe"));
+        System.setProperty("webdriver.chrome.driver", findFile("geckodriver.exe"));
     }
 
     static private String findFile(String filename) {

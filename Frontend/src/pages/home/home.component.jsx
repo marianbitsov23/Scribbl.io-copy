@@ -3,7 +3,7 @@ import React from 'react';
 import UserInput from './user-input';
 
 const Home = (props) => {
-    const { setUsername, openRoomSettings, username, isInvalid, drawingRooms } = UserInput();
+    const { setUsername, openRoomSettings, username, drawingRooms, isInvalid } = UserInput();
 
     return(
         <Container>

@@ -7,7 +7,6 @@ import Timer from '../../components/timer-display/timer.component';
 import WordDisplay from '../../components/word-display/word-display.component';
 import GameState from './game-state';
 import { makeStyles } from '@material-ui/core/styles';
-import ReactCanvasPaint from 'react-canvas-paint'
 import 'react-canvas-paint/dist/index.css'
 
 const useStyles = makeStyles((theme) => ({
@@ -55,9 +54,9 @@ const DrawingRoom = (props) => {
     const canvasRef = useRef(null);
 
     const {
-        messages, setCurrentUser, resultDialog, 
+        messages, setCurrentUser, resultDialog, setBrushColor,
         timeForDrawing, setTimeForDrawing, endMove, draw,
-        users, open, closeDialog, numberOfRounds, colors,
+        users, open, closeDialog, numberOfRounds, colors, brushColor,
         words, brushSize, setBrushSize, updatableCurrentUser,
         chosenWord, chooseWord, stompClient, gameEnd, saveData,
     } = GameState({ url, currentUser, gameState, canvasRef, history: props.history });
@@ -86,19 +85,18 @@ const DrawingRoom = (props) => {
                 <div className={classes.drawing}>
                     <div className={classes.canvas}>
                         <PlayerList users={users} currentUser={updatableCurrentUser} />
-
                         <div>
                             <CanvasDraw
                                 ref={canvasRef}
                                 onChange={event => draw(event)}
                                 disabled={!updatableCurrentUser.isPlaying}
                                 brushRadius={brushSize}
+                                brushColor={brushColor}
                                 canvasHeight={600}
                                 canvasWidth={800}
                             />
                             {updatableCurrentUser.isPlaying &&
                             <div className={classes.tools}>
-                                {/*
                                 <div className={classes.colors}>
                                     <h3>
                                         Choose colors
@@ -116,7 +114,6 @@ const DrawingRoom = (props) => {
                                         </Button>
                                     ))}
                                 </div>
-                                */}
                                 <div className={classes.edit}>
                                     <div className={classes.clear}>
                                         <Button
